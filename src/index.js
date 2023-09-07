@@ -74,7 +74,7 @@ function getClientIp(req) {
         if (is.ip(req.headers['cf-connecting-ip'])) {
             return req.headers['cf-connecting-ip'];
         }
-        
+
         // DigitalOcean.
         // @see https://www.digitalocean.com/community/questions/app-platform-client-ip
         // DO-Connecting-IP - applied to app platform servers behind a proxy.
@@ -124,6 +124,10 @@ function getClientIp(req) {
         }
     }
 
+    if (is.existy(req.socket) && is.ip(req.socket.remoteAddress)) {
+        return req.socket.remoteAddress;
+    }
+
     // Remote address checks.
     // Deprecated
     if (is.existy(req.connection)) {
@@ -136,10 +140,6 @@ function getClientIp(req) {
         ) {
             return req.connection.socket.remoteAddress;
         }
-    }
-
-    if (is.existy(req.socket) && is.ip(req.socket.remoteAddress)) {
-        return req.socket.remoteAddress;
     }
 
     if (is.existy(req.info) && is.ip(req.info.remoteAddress)) {
